@@ -1,9 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { Button } from './components/Button';
 import { MovieCard } from './components/MovieCard';
-
-// import { SideBar } from './components/SideBar';
+import { Button } from './components/Button';
+import { SideBar } from './components/SideBar';
 // import { Content } from './components/Content';
 
 import { api } from './services/api';
@@ -30,18 +29,11 @@ interface MovieProps {
 }
 
 export function App() {
-  const [selectedGenreId, setSelectedGenreId] = useState(1);
-
-  const [genres, setGenres] = useState<GenreResponseProps[]>([]);
-
   const [movies, setMovies] = useState<MovieProps[]>([]);
   const [selectedGenre, setSelectedGenre] = useState<GenreResponseProps>({} as GenreResponseProps);
 
-  useEffect(() => {
-    api.get<GenreResponseProps[]>('genres').then(response => {
-      setGenres(response.data);
-    });
-  }, []);
+  const [selectedGenreId, setSelectedGenreId] = useState(1);
+  const [genres, setGenres] = useState<GenreResponseProps[]>([]);
 
   useEffect(() => {
     api.get<MovieProps[]>(`movies/?Genre_id=${selectedGenreId}`).then(response => {
@@ -53,28 +45,24 @@ export function App() {
     })
   }, [selectedGenreId]);
 
-  function handleClickButton(id: number) {
+  useEffect(() => {
+    api.get<GenreResponseProps[]>('genres').then(response => {
+      setGenres(response.data);
+    });
+  }, []);
+
+  function handleClickButton(id: number): void {
     setSelectedGenreId(id);
   }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <nav className="sidebar">
-        <span>Watch<p>Me</p></span>
 
-        <div className="buttons-container">
-          {genres.map(genre => (
-            <Button
-              id={String(genre.id)}
-              title={genre.title}
-              iconName={genre.name}
-              onClick={() => handleClickButton(genre.id)}
-              selected={selectedGenreId === genre.id}
-            />
-          ))}
-        </div>
-
-      </nav>
+      <SideBar 
+        genres={genres} 
+        handleClickButton={handleClickButton} 
+        selectedGenreId={selectedGenreId} 
+      />
 
       <div className="container">
         <header>

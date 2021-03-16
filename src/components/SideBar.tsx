@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Button } from './Button';
 
 interface GenreResponseProps {
@@ -12,7 +11,6 @@ interface AllGenres {
   handleClickButton: (id: number) => void;
   selectedGenreId: number;
 }
-
 
 export function SideBar({ genres, handleClickButton, selectedGenreId }: AllGenres) {
   return (
